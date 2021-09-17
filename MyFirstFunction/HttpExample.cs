@@ -15,6 +15,7 @@ namespace MyFirstFunction
         [FunctionName("HttpExample")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [Queue("outqueue"), StorageAccount("AzureWebJobsStorage")] ICollector<string> msg,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -29,6 +30,12 @@ namespace MyFirstFunction
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                // Add a message to the output collection
+                msg.Add($"Name passed to the function: {name}");
+            }
+            
             return new OkObjectResult(responseMessage);
         }
     }
