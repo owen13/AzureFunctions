@@ -10,12 +10,12 @@ using Newtonsoft.Json;
 
 namespace MyFirstFunction
 {
-    public static class HttpExample
+    public static class HttpTrigger
     {
-        [FunctionName("HttpExample")]
+        [FunctionName("HttpTrigger")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            [Queue("outqueue"), StorageAccount("AzureWebJobsStorage")] ICollector<string> msg,
+            [Queue("http-trigger-queue"), StorageAccount("AzureWebJobsStorage")] ICollector<string> msg,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -34,6 +34,10 @@ namespace MyFirstFunction
             {
                 // Add a message to the output collection
                 msg.Add($"Name passed to the function: {name}");
+            }
+            else
+            {
+                //msg.Add("No input received");
             }
             
             return new OkObjectResult(responseMessage);
