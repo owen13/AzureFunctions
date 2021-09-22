@@ -37,7 +37,7 @@ namespace MyFirstFunction
             }
             else
             {
-                //msg.Add("No input received");
+                msg.Add("No input received");
             }
             
             return new OkObjectResult(responseMessage);
